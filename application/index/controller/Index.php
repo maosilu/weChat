@@ -5,8 +5,6 @@ class Index
 {
     public function index()
     {
-        echo 'hahaha';
-        die;
         /*
          * 接入微信开发API
          * */
