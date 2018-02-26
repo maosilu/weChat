@@ -60,11 +60,11 @@ class Index
                 $fromUser = $postObj->ToUserName;
                 $time = time();
                 $msgType = 'text';
-                $content = '欢迎关注我们的微信公众号。';
+                $content = '欢迎关注我的微信公众号。';
                 $template = "<xml>
                 <ToUserName>< ![CDATA[%s] ]></ToUserName>
                 <FromUserName>< ![CDATA[%s] ]></FromUserName>
-                <CreateTime>%d</CreateTime>
+                <CreateTime>%s</CreateTime>
                 <MsgType>< ![CDATA[%s] ]></MsgType>
                 <Content>< ![CDATA[%s] ]></Content>
                 </xml>";
