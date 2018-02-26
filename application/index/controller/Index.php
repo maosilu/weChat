@@ -19,9 +19,13 @@ class Index
         $tempStr = implode('', $arr);
         $tempStr = sha1($tempStr);
         //3. 将加密后的字符串与signature进行对比，判断该请求是否来自微信
-        if($tempStr == $signature){
-            echo $_GET['echostr'];
+        //第一次接入微信API的时候，微信验证第三方url的有效性会发送echostr这个参数
+        $echoStr = $_GET['echostr'];
+        if($tempStr == $signature && $echoStr){
+            echo $echoStr;
             exit;
+        }else{
+            $this->responseMsg();
         }
     }
 
