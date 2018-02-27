@@ -21,8 +21,7 @@ class Index
         //3. 将加密后的字符串与signature进行对比，判断该请求是否来自微信
         //第一次接入微信API的时候，微信验证第三方url的有效性会发送echostr这个参数
         $echoStr = $_GET['echostr'];
-//        file_put_contents('api.txt', $echoStr, FILE_APPEND);
-        if($tempStr == $signature && $echoStr){
+        if($tempStr == $signature && isset($echoStr)){
             echo $echoStr;
             exit;
         }else{
@@ -35,8 +34,8 @@ class Index
      * */
     public function responseMsg(){
         //1. 获取到微信推送过来的post数据（xml格式）
-        $postXml = $GLOBALS['HTTP_RAW_POST_DATA'];
-        file_put_contents('subscribe.txt', $postXml, FILE_APPEND);
+        $postXml = $GLOBALS["HTTP_RAW_POST_DATA"];
+        file_put_contents('subscribe.txt', 'hhhh'.$postXml, FILE_APPEND);
         //2. 处理消息类型，并设置回复类型和内容
         /*<xml>
         <ToUserName>< ![CDATA[toUser] ]></ToUserName>
@@ -64,12 +63,12 @@ class Index
                 $msgType = 'text';
                 $content = "欢迎关注【茅丝录】\n微信公众号：$toUser";
                 $template = "<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[%s]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>";
+                <ToUserName><![CDATA[%s]]></ToUserName>
+                <FromUserName><![CDATA[%s]]></FromUserName>
+                <CreateTime>%s</CreateTime>
+                <MsgType><![CDATA[%s]]></MsgType>
+                <Content><![CDATA[%s]]></Content>
+                </xml>";
                 $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
                 echo $info;
             }
