@@ -14,13 +14,14 @@ class Index
         $token = 'weChat';
         $signature = $_GET['signature'];
         $arr = array($nonce, $timestamp, $token);
-        sort($arr);
+        sort($arr, SORT_STRING);
         //2. 将排序后的三个参数拼接之后用sha1()加密
         $tempStr = implode('', $arr);
         $tempStr = sha1($tempStr);
         //3. 将加密后的字符串与signature进行对比，判断该请求是否来自微信
         //第一次接入微信API的时候，微信验证第三方url的有效性会发送echostr这个参数
         $echoStr = $_GET['echostr'];
+//        file_put_contents('api.txt', $echoStr, FILE_APPEND);
         if($tempStr == $signature && $echoStr){
             echo $echoStr;
             exit;
@@ -34,7 +35,8 @@ class Index
      * */
     public function responseMsg(){
         //1. 获取到微信推送过来的post数据（xml格式）
-        $postArr = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $postXml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        file_put_contents('subscribe.txt', $postXml, FILE_APPEND);
         //2. 处理消息类型，并设置回复类型和内容
         /*<xml>
         <ToUserName>< ![CDATA[toUser] ]></ToUserName>
@@ -43,7 +45,7 @@ class Index
         <MsgType>< ![CDATA[event] ]></MsgType>
         <Event>< ![CDATA[subscribe] ]></Event>
         </xml>*/
-        $postObj = simplexml_load_string($postArr);
+        $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDAT);
         //判断该数据包是否是subscribe的事件推送
         if(strtolower($postObj->MsgType) == 'event'){
             //如果是subscribe事件
@@ -60,14 +62,14 @@ class Index
                 $fromUser = $postObj->ToUserName;
                 $time = time();
                 $msgType = 'text';
-                $content = '欢迎关注我的微信公众号。';
+                $content = "欢迎关注【茅丝录】\n微信公众号：$toUser";
                 $template = "<xml>
-                <ToUserName>< ![CDATA[%s] ]></ToUserName>
-                <FromUserName>< ![CDATA[%s] ]></FromUserName>
-                <CreateTime>%s</CreateTime>
-                <MsgType>< ![CDATA[%s] ]></MsgType>
-                <Content>< ![CDATA[%s] ]></Content>
-                </xml>";
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[%s]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>";
                 $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
                 echo $info;
             }
@@ -76,6 +78,15 @@ class Index
 
     //test
     public function show(){
-        echo 'Hello world';
+        $xml = "<xml>
+        <ToUserName><![CDATA[toUser]]></ToUserName>
+        <FromUserName><![CDATA[FromUser]]></FromUserName>
+        <CreateTime>123456789</CreateTime>
+        <MsgType><![CDATA[event]]></MsgType>
+        <Event><![CDATA[subscribe]]></Event>
+        </xml>";
+        $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDAT);
+        var_dump( $obj->ToUserName);
+        var_dump($obj);
     }
 }
