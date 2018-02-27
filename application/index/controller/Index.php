@@ -30,7 +30,7 @@ class Index
     }
 
     /**
-     * 接收事件订阅与回复响应消息
+     * 接收事件与回复响应消息
      * */
     public function responseMsg(){
         //1. 获取到微信推送过来的post数据（xml格式）
@@ -59,18 +59,41 @@ class Index
                 </xml>*/
                 $toUser = $postObj->FromUserName;
                 $fromUser = $postObj->ToUserName;
-                $time = time();
-                $msgType = 'text';
                 $content = "欢迎关注【茅丝录】\n微信公众号：$toUser";
                 $template = "<xml>
                 <ToUserName><![CDATA[%s]]></ToUserName>
                 <FromUserName><![CDATA[%s]]></FromUserName>
                 <CreateTime>%s</CreateTime>
-                <MsgType><![CDATA[%s]]></MsgType>
+                <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA[%s]]></Content>
                 </xml>";
-                $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $content);
+                $info = sprintf($template, $toUser, $fromUser, time(), $content);
                 echo $info;
+            }
+        }
+
+        //接收文本消息并回复纯文本消息
+        /*<xml>
+        <ToUserName>< ![CDATA[toUser] ]></ToUserName>
+        <FromUserName>< ![CDATA[fromUser] ]></FromUserName>
+        <CreateTime>1348831860</CreateTime>
+        <MsgType>< ![CDATA[text] ]></MsgType>
+        <Content>< ![CDATA[this is a test] ]></Content>
+        <MsgId>1234567890123456</MsgId>
+        </xml>*/
+        if(strtolower($postObj->MsgType) == 'text'){
+            if(strtolower($postObj->Content) == '美美'){
+                $template = "<xml>
+                <ToUserName><![CDATA[%s]]></ToUserName>
+                <FromUserName><![CDATA[%s]]></FromUserName>
+                <CreateTime>%s</CreateTime>
+                <MsgType><![CDATA[text]]></MsgType>
+                <Content><![CDATA[%s]]></Content>
+                </xml>";
+                $toUser = $postObj->FromUserName;
+                $fromUser = $postObj->ToUserName;
+                $content = '美美啦！';
+                echo sprintf($template, $toUser, $fromUser, time(), $content);
             }
         }
     }
