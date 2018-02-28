@@ -35,7 +35,7 @@ class Index
     public function responseMsg(){
         //1. 获取到微信推送过来的post数据（xml格式）
         $postXml = $GLOBALS["HTTP_RAW_POST_DATA"];
-        file_put_contents('subscribe.txt', 'hhhh'.$postXml, FILE_APPEND);
+        file_put_contents('response.txt', 'hhhh'.$postXml, FILE_APPEND);
         //2. 处理消息类型，并设置回复类型和内容
         /*<xml>
         <ToUserName>< ![CDATA[toUser] ]></ToUserName>
@@ -84,7 +84,6 @@ class Index
         </xml>*/
         if(strtolower($postObj->MsgType) == 'text'){
             if(strtolower($postObj->Content) == 'hello'){
-                echo '';
                 $template = '<xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
