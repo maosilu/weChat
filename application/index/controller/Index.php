@@ -5,7 +5,6 @@ class Index
 {
     public function index()
     {
-        echo 'success';
         /*
          * 接入微信开发API
          * */
@@ -45,6 +44,7 @@ class Index
         <MsgType>< ![CDATA[event] ]></MsgType>
         <Event>< ![CDATA[subscribe] ]></Event>
         </xml>*/
+//        $postXml = "<xml><ToUserName><![CDATA[gh_37262390bb3e]]></ToUserName> <FromUserName><![CDATA[o8UM4s6PjgA4hznjsMgfpIvdpWkQ]]></FromUserName> <CreateTime>1519781728</CreateTime> <MsgType><![CDATA[text]]></MsgType> <Content><![CDATA[hello]]></Content> <MsgId>6527412819269196574</MsgId> </xml>";
         $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDATA);
         //判断该数据包是否是subscribe的事件推送
         if(strtolower($postObj->MsgType) == 'event'){
@@ -61,15 +61,15 @@ class Index
                 $toUser = $postObj->FromUserName;
                 $fromUser = $postObj->ToUserName;
                 $content = "欢迎关注【茅丝录】\n微信公众号：$toUser";
-                $template = "<xml>
+                $template = '<xml>
                 <ToUserName><![CDATA[%s]]></ToUserName>
                 <FromUserName><![CDATA[%s]]></FromUserName>
                 <CreateTime>%s</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA[%s]]></Content>
-                </xml>";
+                </xml>';
                 $info = sprintf($template, $toUser, $fromUser, time(), $content);
-                echo $info;
+                var_dump($info);
             }
         }
 
@@ -83,12 +83,20 @@ class Index
         <MsgId>1234567890123456</MsgId>
         </xml>*/
         if(strtolower($postObj->MsgType) == 'text'){
-            if(strtolower($postObj->Content) == '美美'){
-                $template = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>";
+            if(strtolower($postObj->Content) == 'hello'){
+                echo '';
+                $template = '<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>';
                 $toUser = $postObj->FromUserName;
                 $fromUser = $postObj->ToUserName;
-                $content = '美美啦！';
-                echo sprintf($template, $toUser, $fromUser, time(), $content);
+                $content = 'hello world';
+                $info = sprintf($template, $toUser, $fromUser, time(), $content);
+                var_dump($info);
             }
         }
     }
