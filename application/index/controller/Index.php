@@ -5,6 +5,7 @@ class Index
 {
     public function index()
     {
+        echo 'success';
         /*
          * 接入微信开发API
          * */
@@ -44,7 +45,7 @@ class Index
         <MsgType>< ![CDATA[event] ]></MsgType>
         <Event>< ![CDATA[subscribe] ]></Event>
         </xml>*/
-        $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDAT);
+        $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDATA);
         //判断该数据包是否是subscribe的事件推送
         if(strtolower($postObj->MsgType) == 'event'){
             //如果是subscribe事件
@@ -83,13 +84,7 @@ class Index
         </xml>*/
         if(strtolower($postObj->MsgType) == 'text'){
             if(strtolower($postObj->Content) == '美美'){
-                $template = "<xml>
-                <ToUserName><![CDATA[%s]]></ToUserName>
-                <FromUserName><![CDATA[%s]]></FromUserName>
-                <CreateTime>%s</CreateTime>
-                <MsgType><![CDATA[text]]></MsgType>
-                <Content><![CDATA[%s]]></Content>
-                </xml>";
+                $template = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content></xml>";
                 $toUser = $postObj->FromUserName;
                 $fromUser = $postObj->ToUserName;
                 $content = '美美啦！';
@@ -102,12 +97,12 @@ class Index
     public function show(){
         $xml = "<xml>
         <ToUserName><![CDATA[toUser]]></ToUserName>
-        <FromUserName><![CDATA[FromUser]]></FromUserName>
+        <FromUserName><![CDATA[fromUser]]></FromUserName>
         <CreateTime>123456789</CreateTime>
         <MsgType><![CDATA[event]]></MsgType>
         <Event><![CDATA[subscribe]]></Event>
         </xml>";
-        $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDAT);
+        $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         var_dump( $obj->ToUserName);
         var_dump($obj);
     }
