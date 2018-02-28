@@ -33,49 +33,67 @@ class Index
      * */
     public function responseMsg(){
         //1. 获取到微信推送过来的post数据（xml格式）
+        //因为很多都设置了register_globals禁止，不能用 $GLOBALS['HTTP_RAW_POST_DATA']
 //        $postXml = $GLOBALS['HTTP_RAW_POST_DATA'];
         $postXml = file_get_contents("php://input");
         if(!empty($postXml)){
-            file_put_contents('response.txt', 'hhhh'.$postXml, FILE_APPEND);
+            file_put_contents('response.txt', '微信推送过来的信息：'.$postXml, FILE_APPEND);
             //2. 处理消息类型，并设置回复类型和内容
-            /*<xml>
+            $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $msgType = strtolower($postObj->MsgType);
+            switch($msgType){
+                case 'event':
+                    $result = $this->receiveEvent($postObj);
+                    break;
+                case 'text':
+                    $result = $this->receiveText($postObj);
+                    break;
+            }
+            echo $result;
+        }else{
+            echo '';
+            exit;
+        }
+
+    }
+
+    //接收事件消息
+    private function receiveEvent($postObj){
+        /*<xml>
             <ToUserName>< ![CDATA[toUser] ]></ToUserName>
             <FromUserName>< ![CDATA[FromUser] ]></FromUserName>
             <CreateTime>123456789</CreateTime>
             <MsgType>< ![CDATA[event] ]></MsgType>
             <Event>< ![CDATA[subscribe] ]></Event>
             </xml>*/
-//        $postXml = "<xml><ToUserName><![CDATA[gh_37262390bb3e]]></ToUserName> <FromUserName><![CDATA[o8UM4s6PjgA4hznjsMgfpIvdpWkQ]]></FromUserName> <CreateTime>1519781728</CreateTime> <MsgType><![CDATA[text]]></MsgType> <Content><![CDATA[hello]]></Content> <MsgId>6527412819269196574</MsgId> </xml>";
-            $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDATA);
-            //判断该数据包是否是subscribe的事件推送
-            if(strtolower($postObj->MsgType) == 'event'){
-                //如果是subscribe事件
-                if(strtolower($postObj->Event) == 'subscribe'){
-                    //回复用户消息（text类型）
-                    /*<xml>
-                    <ToUserName><![CDATA[toUser]]></ToUserName>
-                    <FromUserName><![CDATA[fromUser]]></FromUserName>
-                    <CreateTime>12345678</CreateTime>
-                    <MsgType><![CDATA[text]]></MsgType>
-                    <Content><![CDATA[你好]]></Content>
-                    </xml>*/
-                    $toUser = $postObj->FromUserName;
-                    $fromUser = $postObj->ToUserName;
-                    $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：hello";
-                    $template = '<xml>
+        $event = strtolower($postObj->Event);
+        switch ($event){
+            case 'subscribe':
+                //回复用户消息（text类型）
+                $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：hello";
+                break;
+            case 'unsubscribe':
+                $content = '您已取消关注，我会想你的～';
+                break;
+            default:
+                $content = 'receive a new event:'.$postObj->Event;
+                break;
+        }
+        $toUser = $postObj->FromUserName;
+        $fromUser = $postObj->ToUserName;
+        $template = '<xml>
                 <ToUserName><![CDATA[%s]]></ToUserName>
                 <FromUserName><![CDATA[%s]]></FromUserName>
                 <CreateTime>%s</CreateTime>
                 <MsgType><![CDATA[text]]></MsgType>
                 <Content><![CDATA[%s]]></Content>
                 </xml>';
-                    $info = sprintf($template, $toUser, $fromUser, time(), $content);
-                    var_dump($info);
-                }
-            }
-
-            //接收文本消息并回复纯文本消息
-            /*<xml>
+        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+        return $info;
+    }
+    //接收文本消息
+    private function receiveText($postObj){
+        /*<xml>
             <ToUserName>< ![CDATA[toUser] ]></ToUserName>
             <FromUserName>< ![CDATA[fromUser] ]></FromUserName>
             <CreateTime>1348831860</CreateTime>
@@ -83,27 +101,20 @@ class Index
             <Content>< ![CDATA[this is a test] ]></Content>
             <MsgId>1234567890123456</MsgId>
             </xml>*/
-            if(strtolower($postObj->MsgType) == 'text'){
-                if(strtolower($postObj->Content) == 'hello'){
-                    $template = '<xml>
+        if(strtolower($postObj->Content) == 'hello'){
+            $template = '<xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
 <CreateTime>%s</CreateTime>
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[%s]]></Content>
 </xml>';
-                    $toUser = $postObj->FromUserName;
-                    $fromUser = $postObj->ToUserName;
-                    $content = 'hello world';
-                    $info = sprintf($template, $toUser, $fromUser, time(), $content);
-                    var_dump($info);
-                }
-            }
-        }else{
-            echo '';
-            exit;
+            $toUser = $postObj->FromUserName;
+            $fromUser = $postObj->ToUserName;
+            $content = 'hello world';
+            $info = sprintf($template, $toUser, $fromUser, time(), $content);
+            return $info;
         }
-
     }
 
     //test
