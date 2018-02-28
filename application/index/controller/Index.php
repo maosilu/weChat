@@ -61,7 +61,7 @@ class Index
                     </xml>*/
                     $toUser = $postObj->FromUserName;
                     $fromUser = $postObj->ToUserName;
-                    $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice";
+                    $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：hello";
                     $template = '<xml>
                 <ToUserName><![CDATA[%s]]></ToUserName>
                 <FromUserName><![CDATA[%s]]></FromUserName>
