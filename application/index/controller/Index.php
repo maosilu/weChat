@@ -104,19 +104,23 @@ class Index
             </xml>*/
         $keyword = trim($postObj->Content);
         if(strtolower($keyword) == 'hello'){
-            $template = '<xml>
+            $content = 'hello world';
+        }else{
+            $content = date('Y-m-d H:i:s', time())."\r\n".'<a href="https://github.com/maosilu/weChat">代码git地址</a>'."\r\n嘣嘣嘣嘣！～";
+        }
+
+        $template = '<xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
 <CreateTime>%s</CreateTime>
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[%s]]></Content>
 </xml>';
-            $toUser = $postObj->FromUserName;
-            $fromUser = $postObj->ToUserName;
-            $content = 'hello world';
-            $info = sprintf($template, $toUser, $fromUser, time(), $content);
-            return $info;
-        }
+        $toUser = $postObj->FromUserName;
+        $fromUser = $postObj->ToUserName;
+        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+        return $info;
+
     }
 
     //test
