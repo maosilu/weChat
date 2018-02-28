@@ -101,7 +101,8 @@ class Index
             <Content>< ![CDATA[this is a test] ]></Content>
             <MsgId>1234567890123456</MsgId>
             </xml>*/
-        if(strtolower($postObj->Content) == 'hello'){
+        $keyword = trim($postObj->Content);
+        if(strtolower($keyword) == 'hello'){
             $template = '<xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
 <FromUserName><![CDATA[%s]]></FromUserName>
