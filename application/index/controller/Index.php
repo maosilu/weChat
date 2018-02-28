@@ -37,7 +37,7 @@ class Index
 //        $postXml = $GLOBALS['HTTP_RAW_POST_DATA'];
         $postXml = file_get_contents("php://input");
         if(!empty($postXml)){
-            file_put_contents('response.txt', '微信推送过来的信息：'.$postXml, FILE_APPEND);
+            file_put_contents('response.txt', '微信推送过来的信息：'.$postXml.'\r\n', FILE_APPEND);
             //2. 处理消息类型，并设置回复类型和内容
             $postObj = simplexml_load_string($postXml, 'SimpleXMLElement', LIBXML_NOCDATA);
             $msgType = strtolower($postObj->MsgType);
@@ -49,6 +49,7 @@ class Index
                     $result = $this->receiveText($postObj);
                     break;
             }
+            file_put_contents('response.txt', '回复用户的信息：'.$postXml.'\r\n', FILE_APPEND);
             echo $result;
         }else{
             echo '';
