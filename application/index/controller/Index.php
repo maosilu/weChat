@@ -116,11 +116,11 @@ class Index
         if($keyword == 'hello'){
             $content = 'hello world';
         }elseif ($keyword == 'graphic'){
-            $title1 = '大图';
+            $title1 = '我的CSDN';
             $description1 = '我是美女';
             $picurl1 = '/public/static/image/big_spring.jpeg';
             $url1 = 'http://blog.csdn.net/maosilu_ICE';
-            $title2 = '小兔';
+            $title2 = '我的开源中国';
             $description2 = '我是才女';
             $picurl2 = '/public/static/image/small_spring.jpeg';
             $url2 = 'https://my.oschina.net/maosilu/blog';
@@ -166,14 +166,14 @@ class Index
     private function receiveNews($postObj){
         $keyword = trim($postObj->Content);
         if(strtolower($keyword) == 'graphic'){
-            $title1 = '大图';
+            $title1 = '我的CSDN';
             $description1 = '我是美女';
-            $picurl1 = '';
-            $url1 = '';
-            $title2 = '小兔';
+            $picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
+            $url1 = 'http://blog.csdn.net/maosilu_ICE';
+            $title2 = '我的开源中国';
             $description2 = '我是才女';
-            $picurl2 = '';
-            $url2 = '';
+            $picurl2 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpeg';
+            $url2 = 'https://my.oschina.net/maosilu/blog';
         }
 
         $template = '<xml>
@@ -207,7 +207,9 @@ class Index
 
     //test
     public function show(){
-        $xml = "<xml>
+        var_dump($_SERVER);
+
+        /*$xml = "<xml>
         <ToUserName><![CDATA[toUser]]></ToUserName>
         <FromUserName><![CDATA[fromUser]]></FromUserName>
         <CreateTime>123456789</CreateTime>
@@ -216,6 +218,6 @@ class Index
         </xml>";
         $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         var_dump( $obj->ToUserName);
-        var_dump($obj);
+        var_dump($obj);*/
     }
 }
