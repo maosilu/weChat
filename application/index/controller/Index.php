@@ -48,6 +48,12 @@ class Index
                 case 'text':
                     $result = $this->receiveText($postObj);
                     break;
+                case 'news':
+                    $result = $this->receiveEvent($postObj);
+                    break;
+                default:
+                    $result = 'Unknow msg type: '.$msgType;
+                    break;
             }
             file_put_contents('response.txt', '回复用户的信息：'.$postXml.'\r\n', FILE_APPEND);
             echo $result;
@@ -58,8 +64,9 @@ class Index
 
     }
 
-    //接收事件消息
+    //接收事件消息，回复文本消息
     private function receiveEvent($postObj){
+        //接收的事件
         /*<xml>
             <ToUserName>< ![CDATA[toUser] ]></ToUserName>
             <FromUserName>< ![CDATA[FromUser] ]></FromUserName>
@@ -92,8 +99,11 @@ class Index
         $info = sprintf($template, $toUser, $fromUser, time(), $content);
         return $info;
     }
-    //接收文本消息
+    //接收文本消息，回复文本消息
     private function receiveText($postObj){
+        $toUser = $postObj->FromUserName;
+        $fromUser = $postObj->ToUserName;
+        //接收的文本消息
         /*<xml>
             <ToUserName>< ![CDATA[toUser] ]></ToUserName>
             <FromUserName>< ![CDATA[fromUser] ]></FromUserName>
@@ -102,9 +112,41 @@ class Index
             <Content>< ![CDATA[this is a test] ]></Content>
             <MsgId>1234567890123456</MsgId>
             </xml>*/
-        $keyword = trim($postObj->Content);
-        if(strtolower($keyword) == 'hello'){
+        $keyword = strtolower(trim($postObj->Content));
+        if($keyword == 'hello'){
             $content = 'hello world';
+        }elseif ($keyword == 'graphic'){
+            $title1 = '大图';
+            $description1 = '我是美女';
+            $picurl1 = '/public/static/image/big_spring.jpeg';
+            $url1 = 'http://blog.csdn.net/maosilu_ICE';
+            $title2 = '小兔';
+            $description2 = '我是才女';
+            $picurl2 = '/public/static/image/small_spring.jpeg';
+            $url2 = 'https://my.oschina.net/maosilu/blog';
+            $template = '<xml>
+        <ToUserName><![CDATA[%s]]></ToUserName>
+        <FromUserName><![CDATA[%s]]></FromUserName>
+        <CreateTime>%s</CreateTime>
+        <MsgType><![CDATA[news]]></MsgType>
+        <ArticleCount>2</ArticleCount>
+        <Articles>
+            <item>
+                <Title><![CDATA[%s]]></Title>
+                <Description><![CDATA[%s]]></Description>
+                <PicUrl><![CDATA[%s]]></PicUrl>
+                <Url><![CDATA[%s]]></Url>
+            </item>
+            <item>
+                <Title><![CDATA[%s]]></Title>
+                <Description><![CDATA[%s]]></Description>
+                <PicUrl><![CDATA[%s]]></PicUrl>
+                <Url><![CDATA[%s]]></Url>
+            </item>
+        </Articles>
+        </xml>';
+            $info = sprintf($template, $toUser, $fromUser, time(), $title1, $description1, $picurl1, $url1, $title2, $description2, $picurl2, $url2);
+            return $info;
         }else{
             $content = date('Y-m-d H:i:s', time())."\r\n".'<a href="https://github.com/maosilu/weChat">代码git地址</a>'."\r\n嘣嘣嘣嘣！～";
         }
@@ -116,9 +158,49 @@ class Index
 <MsgType><![CDATA[text]]></MsgType>
 <Content><![CDATA[%s]]></Content>
 </xml>';
+        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+        return $info;
+
+    }
+    //接收图文请求，回复单图文
+    private function receiveNews($postObj){
+        $keyword = trim($postObj->Content);
+        if(strtolower($keyword) == 'graphic'){
+            $title1 = '大图';
+            $description1 = '我是美女';
+            $picurl1 = '';
+            $url1 = '';
+            $title2 = '小兔';
+            $description2 = '我是才女';
+            $picurl2 = '';
+            $url2 = '';
+        }
+
+        $template = '<xml>
+        <ToUserName><![CDATA[%s]]></ToUserName>
+        <FromUserName><![CDATA[%s]]></FromUserName>
+        <CreateTime>%s</CreateTime>
+        <MsgType><![CDATA[news]]></MsgType>
+        <ArticleCount>2</ArticleCount>
+        <Articles>
+            <item>
+                <Title><![CDATA[%s]]></Title>
+                <Description><![CDATA[%s]]></Description>
+                <PicUrl><![CDATA[%s]]></PicUrl>
+                <Url><![CDATA[%s]]></Url>
+            </item>
+            <item>
+                <Title><![CDATA[%s]]></Title>
+                <Description><![CDATA[%s]]></Description>
+                <PicUrl><![CDATA[%s]]></PicUrl>
+                <Url><![CDATA[%s]]></Url>
+            </item>
+        </Articles>
+        </xml>';
         $toUser = $postObj->FromUserName;
         $fromUser = $postObj->ToUserName;
-        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+
+        $info = sprintf($template, $toUser, $fromUser, time(), $title1, $description1, $picurl1, $url1, $title2, $description2, $picurl2, $url2);
         return $info;
 
     }
