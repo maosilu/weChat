@@ -112,7 +112,7 @@ class Index
         $keyword = strtolower(trim($postObj->Content));
         if($keyword == 'hello'){
             $content = 'hello world';
-        }elseif ($keyword == 'graphic'){
+        }elseif ($keyword == '图文'){
             $title1 = '我的CSDN';
             $description1 = '我是美女';
             $picurl1 = 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
