@@ -75,7 +75,7 @@ class Index
         switch ($event){
             case 'subscribe':
                 //回复用户消息（text类型）
-                $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：\n(1): hello\n(2): 图文\n(3): 除以上的任意其他文字";
+                $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：\n(1): hello\n(2): 图文\n(3): 除以上的任意其他文字有惊喜哦～";
                 break;
             case 'unsubscribe':
                 $content = '您已取消关注，我会想你的～';
