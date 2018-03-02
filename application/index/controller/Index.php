@@ -118,11 +118,11 @@ class Index
         }elseif ($keyword == 'graphic'){
             $title1 = '我的CSDN';
             $description1 = '我是美女';
-            $picurl1 = '/public/static/image/big_spring.jpeg';
+            $picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
             $url1 = 'http://blog.csdn.net/maosilu_ICE';
             $title2 = '我的开源中国';
             $description2 = '我是才女';
-            $picurl2 = '/public/static/image/small_spring.jpeg';
+            $picurl2 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpeg';
             $url2 = 'https://my.oschina.net/maosilu/blog';
             $template = '<xml>
         <ToUserName><![CDATA[%s]]></ToUserName>
@@ -207,6 +207,7 @@ class Index
 
     //test
     public function show(){
+
         var_dump($_SERVER);
 
         /*$xml = "<xml>
