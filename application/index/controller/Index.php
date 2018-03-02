@@ -122,7 +122,7 @@ class Index
             $url1 = 'http://blog.csdn.net/maosilu_ICE';
             $title2 = '我的开源中国';
             $description2 = '我是才女';
-            $picurl2 = 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpeg';
+            $picurl2 = 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpg';
             $url2 = 'https://my.oschina.net/maosilu/blog';
             $template = '<xml>
         <ToUserName><![CDATA[%s]]></ToUserName>
