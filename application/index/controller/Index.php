@@ -162,48 +162,6 @@ class Index
         return $info;
 
     }
-    //接收图文请求，回复单图文
-    private function receiveNews($postObj){
-        $keyword = trim($postObj->Content);
-        if(strtolower($keyword) == 'graphic'){
-            $title1 = '我的CSDN';
-            $description1 = '我是美女';
-            $picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
-            $url1 = 'http://blog.csdn.net/maosilu_ICE';
-            $title2 = '我的开源中国';
-            $description2 = '我是才女';
-            $picurl2 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpeg';
-            $url2 = 'https://my.oschina.net/maosilu/blog';
-        }
-
-        $template = '<xml>
-        <ToUserName><![CDATA[%s]]></ToUserName>
-        <FromUserName><![CDATA[%s]]></FromUserName>
-        <CreateTime>%s</CreateTime>
-        <MsgType><![CDATA[news]]></MsgType>
-        <ArticleCount>2</ArticleCount>
-        <Articles>
-            <item>
-                <Title><![CDATA[%s]]></Title>
-                <Description><![CDATA[%s]]></Description>
-                <PicUrl><![CDATA[%s]]></PicUrl>
-                <Url><![CDATA[%s]]></Url>
-            </item>
-            <item>
-                <Title><![CDATA[%s]]></Title>
-                <Description><![CDATA[%s]]></Description>
-                <PicUrl><![CDATA[%s]]></PicUrl>
-                <Url><![CDATA[%s]]></Url>
-            </item>
-        </Articles>
-        </xml>';
-        $toUser = $postObj->FromUserName;
-        $fromUser = $postObj->ToUserName;
-
-        $info = sprintf($template, $toUser, $fromUser, time(), $title1, $description1, $picurl1, $url1, $title2, $description2, $picurl2, $url2);
-        return $info;
-
-    }
 
     //test
     public function show(){
