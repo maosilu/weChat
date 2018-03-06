@@ -173,6 +173,27 @@ class Index
             echo 'curl error: '.curl_error($ch)."\n";
         }
         curl_close($ch);
+//        var_dump(json_decode($res, true));
+        return json_decode($res, true);
+    }
+
+    //获取微信服务器IP地址
+    public function getWxServerIp(){
+        //http请求方式: GET https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=ACCESS_TOKEN
+        $res = $this->getAccessToken();
+        if(!isset($res['access_token'])){
+            echo 'access_token获取失败！';
+            exit;
+        }
+        $url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='.$res['access_token'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $res = curl_exec($ch);
+        if(curl_errno($ch)){
+            echo 'curl error: '.curl_error($ch)."\n";
+        }
+        curl_close($ch);
         var_dump(json_decode($res, true));
     }
 
