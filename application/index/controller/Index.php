@@ -160,6 +160,22 @@ class Index
 
     }
 
+    // 获取access_token
+    public function getAccessToken(){
+        $appid = 'wx6c8e0aca5b997b12';
+        $secret = 'd534279af4b3481c07ffece9454e3e06';
+        $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$appid.'&secret='.$secret;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $res = curl_exec($ch);
+        if(curl_errno($ch)){
+            echo 'curl error: '.curl_error($ch)."\n";
+        }
+        curl_close($ch);
+        var_dump(json_decode($res, true));
+    }
+
     //test
     public function show(){
         $picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
