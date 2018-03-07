@@ -117,7 +117,7 @@ class Index
         }elseif ($keyword == '图文'){
 //            (new \app\index\model\Index())->responseGraphic();
             return (new model\Index)->responseGraphic($postObj);
-            
+
         }else{
             $content = date('Y-m-d H:i:s', time())."\r\n".'<a href="https://github.com/maosilu/weChat">代码git地址</a>'."\r\n嘣嘣嘣嘣！～";
         }
