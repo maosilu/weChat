@@ -125,24 +125,24 @@ class Index
             $cityWeatherResult = $weather->getWeather('北京');
             if($cityWeatherResult['error_code'] == 0){    //以下可根据实际业务需求，自行改写
                 $data = $cityWeatherResult['result'];
-                $content = "=======当前天气实况=======<br>";
+                $content = "====当前天气实况====\r\n";
                 $content .= "温度：".$data['sk']['temp']."    ";
-                $content .= "风向：".$data['sk']['wind_direction']."    （".$data['sk']['wind_strength']."）";
+                $content .= "风向：".$data['sk']['wind_direction']."（".$data['sk']['wind_strength']."）";
                 $content .= "湿度：".$data['sk']['humidity']."    ";
-                $content .= "<br><br>";
+                $content .= "\r\n\r\n";
 
-                $content .= "=======未来几天天气预报=======<br>";
+                $content .= "==未来几天天气预报==\r\n";
                 foreach($data['future'] as $wkey =>$f){
-                    $content .= "日期:".$f['date']." ".$f['week']." ".$f['weather']." ".$f['temperature']."<br>";
+                    $content .= "日期:".$f['date']." ".$f['week']." ".$f['weather']." ".$f['temperature']."\r\n";
                 }
-                $content .= "<br><br>";
+                $content .= "\r\n";
 
-                $content .= "=======相关天气指数=======<br>";
-                $content .= "穿衣指数：".$data['today']['dressing_index']." , ".$data['today']['dressing_advice']."<br>";
-                $content .= "紫外线强度：".$data['today']['uv_index']."<br>";
-                $content .= "舒适指数：".$data['today']['comfort_index']."<br>";
+                $content .= "====相关天气指数====\r\n";
+                $content .= "穿衣指数：".$data['today']['dressing_index']." , ".$data['today']['dressing_advice']."\r\n";
+                $content .= "紫外线强度：".$data['today']['uv_index']."\r\n";
+                $content .= "舒适指数：".$data['today']['comfort_index']."\r\n";
                 $content .= "洗车指数：".$data['today']['wash_index'];
-                $content .= "<br><br>";
+//                $content .= "\n\r\n\r";
 
             }else{
                  $content = $cityWeatherResult['error_code'].":".$cityWeatherResult['reason'];
