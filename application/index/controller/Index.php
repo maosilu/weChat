@@ -2,9 +2,12 @@
 namespace app\index\controller;
 
 use app\index\model;
+use app\index\controller\Weather;
 
 class Index
 {
+    private $appkey = 'd9703809cce7fb31185995e548e489b6'; //申请的聚合天气预报APPKEY
+
     public function index()
     {
         /*
@@ -117,7 +120,33 @@ class Index
         }elseif ($keyword == '图文'){
 //            (new \app\index\model\Index())->responseGraphic();
             return (new model\Index)->responseGraphic($postObj);
+        }elseif($keyword == '北京'){
+            $weather = new Weather($this->appkey);
+            $cityWeatherResult = $weather->getWeather('北京');
+            if($cityWeatherResult['error_code'] == 0){    //以下可根据实际业务需求，自行改写
+                $data = $cityWeatherResult['result'];
+                $content = "=======当前天气实况=======<br>";
+                $content .= "温度：".$data['sk']['temp']."    ";
+                $content .= "风向：".$data['sk']['wind_direction']."    （".$data['sk']['wind_strength']."）";
+                $content .= "湿度：".$data['sk']['humidity']."    ";
+                $content .= "<br><br>";
 
+                $content .= "=======未来几天天气预报=======<br>";
+                foreach($data['future'] as $wkey =>$f){
+                    $content .= "日期:".$f['date']." ".$f['week']." ".$f['weather']." ".$f['temperature']."<br>";
+                }
+                $content .= "<br><br>";
+
+                $content .= "=======相关天气指数=======<br>";
+                $content .= "穿衣指数：".$data['today']['dressing_index']." , ".$data['today']['dressing_advice']."<br>";
+                $content .= "紫外线强度：".$data['today']['uv_index']."<br>";
+                $content .= "舒适指数：".$data['today']['comfort_index']."<br>";
+                $content .= "洗车指数：".$data['today']['wash_index'];
+                $content .= "<br><br>";
+
+            }else{
+                 $content = $cityWeatherResult['error_code'].":".$cityWeatherResult['reason'];
+            }
         }else{
             $content = date('Y-m-d H:i:s', time())."\r\n".'<a href="https://github.com/maosilu/weChat">代码git地址</a>'."\r\n嘣嘣嘣嘣！～";
         }
@@ -173,11 +202,11 @@ class Index
 
     //test
     public function show(){
-        $picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
-//        http://localhost:8080/weChat/public/static/image/big_spring.jpeg
+        $weather = new Weather($this->appkey);
+        /*$picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
         echo $picurl1;
 
-        var_dump($_SERVER);
+        var_dump($_SERVER);*/
 
         /*$xml = "<xml>
         <ToUserName><![CDATA[toUser]]></ToUserName>
