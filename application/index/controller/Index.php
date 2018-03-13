@@ -7,10 +7,14 @@ use app\index\controller\Weather;
 class Index
 {
 
-    private $appid = '';
+    /*private $appid = '';
     private $secret = '';
-    private $appkey = ''; //申请的聚合天气预报APPKEY
-    
+    private $appkey = ''; //申请的聚合天气预报APPKEY*/
+    //微信公众测试号信息
+    private $appid = 'wxaf8818a602b65360';
+    private $secret = '69997b4bccba272af3b2151b0fe17f4b';
+    private $appkey = 'd9703809cce7fb31185995e548e489b6'; //申请的聚合天气预报APPKEY
+
 
     public function index()
     {
@@ -170,14 +174,7 @@ class Index
     // 获取access_token
     public function getAccessToken(){
         $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $res = curl_exec($ch);
-        if(curl_errno($ch)){
-            echo 'curl error: '.curl_error($ch)."\n";
-        }
-        curl_close($ch);
+        $res = http_curl($url);
 //        var_dump(json_decode($res, true));
         return json_decode($res, true);
     }
@@ -191,15 +188,13 @@ class Index
             exit;
         }
         $url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='.$res['access_token'];
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $res = curl_exec($ch);
-        if(curl_errno($ch)){
-            echo 'curl error: '.curl_error($ch)."\n";
-        }
-        curl_close($ch);
+        $res = http_curl($url);
         var_dump(json_decode($res, true));
+    }
+
+    //创建微信菜单
+    public function definedItem(){
+
     }
 
     //test
