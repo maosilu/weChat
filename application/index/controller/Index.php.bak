@@ -162,8 +162,8 @@ class Index
 
     // 获取access_token
     public function getAccessToken(){
-        $appid = 'wx6c8e0aca5b997b12';
-        $secret = 'd534279af4b3481c07ffece9454e3e06';
+        $appid = ''; //你的公众号开发信息，开发者ID
+        $secret = ''; //你的公众号开发信息，开发者密码
         $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$appid.'&secret='.$secret;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

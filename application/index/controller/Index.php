@@ -6,6 +6,10 @@ use app\index\controller\Weather;
 
 class Index
 {
+
+    private $appid = '';
+    private $secret = '';
+    
     private $appkey = 'd9703809cce7fb31185995e548e489b6'; //申请的聚合天气预报APPKEY
 
     public function index()
@@ -165,9 +169,7 @@ class Index
 
     // 获取access_token
     public function getAccessToken(){
-        $appid = 'wx6c8e0aca5b997b12';
-        $secret = 'd534279af4b3481c07ffece9454e3e06';
-        $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$appid.'&secret='.$secret;
+        $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
