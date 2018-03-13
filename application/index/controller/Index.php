@@ -9,8 +9,8 @@ class Index
 
     private $appid = '';
     private $secret = '';
+    private $appkey = ''; //申请的聚合天气预报APPKEY
     
-    private $appkey = 'd9703809cce7fb31185995e548e489b6'; //申请的聚合天气预报APPKEY
 
     public function index()
     {
