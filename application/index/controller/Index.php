@@ -7,13 +7,10 @@ use app\index\controller\Weather;
 class Index
 {
 
-    /*private $appid = '';
+    private $appid = '';
     private $secret = '';
-    private $appkey = ''; //申请的聚合天气预报APPKEY*/
-    //微信公众测试号信息
-    private $appid = 'wxaf8818a602b65360';
-    private $secret = '69997b4bccba272af3b2151b0fe17f4b';
-    private $appkey = 'd9703809cce7fb31185995e548e489b6'; //申请的聚合天气预报APPKEY
+    private $appkey = ''; //申请的聚合天气预报APPKEY
+    
 
 
     public function index()
@@ -176,7 +173,7 @@ class Index
         $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
         $res = http_curl($url);
 //        var_dump(json_decode($res, true));
-        return json_decode($res, true);
+        return $res;
     }
 
     //获取微信服务器IP地址
@@ -189,7 +186,7 @@ class Index
         }
         $url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='.$res['access_token'];
         $res = http_curl($url);
-        var_dump(json_decode($res, true));
+        var_dump($res);
     }
 
     //创建微信菜单
