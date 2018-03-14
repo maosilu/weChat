@@ -11,13 +11,13 @@
 
 // 应用公共文件
 
-/*
+/**
  * url解析
- * @param   $url        string     url
+ * @param   $url        string   url
  * @param   $type       string   请求类型
- * @param   $post_data  json       post请求参数
+ * @param   $post_data  json     post请求参数
  * @param   $resType    string   返回数据类型
- * @return  $res        mixed      url请求解析结果
+ * @return  $res        mixed    url请求解析结果
  * */
 function http_curl($url, $type='get', $post_data = '', $resType = 'array'){
     $ch = curl_init();
@@ -38,7 +38,7 @@ function http_curl($url, $type='get', $post_data = '', $resType = 'array'){
     }
 }
 
-/*
+/**
  * 发送json字符串信息
  * @param $res  mixed  要解析的参数
  * @return null
