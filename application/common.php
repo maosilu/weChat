@@ -23,13 +23,16 @@ function http_curl($url, $type='get', $post_data = '', $resType = 'array'){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,false);//跳过证书检查
+//    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,false);//从证书中检查ssl加密算法是否存在
     if ($type == 'post'){
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURL_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
     }
     $res = curl_exec($ch);
     if(curl_errno($ch)){
         echo 'curl error: '.curl_error($ch)."\n";
+        exit();
     }
     curl_close($ch);
 

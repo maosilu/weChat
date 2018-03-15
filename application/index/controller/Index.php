@@ -3,6 +3,7 @@ namespace app\index\controller;
 
 use app\index\model;
 use app\index\controller\Weather;
+use think\Session;
 
 class Index
 {
@@ -11,6 +12,7 @@ class Index
     private $secret = '';
     private $appkey = ''; //申请的聚合天气预报APPKEY
     
+
 
 
     public function index()
@@ -168,35 +170,88 @@ class Index
 
     }
 
-    // 获取access_token
+    /**
+     * 获取access_token 将access_token存在session/cookie中
+    */
     public function getAccessToken(){
-        $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
-        $res = http_curl($url);
-//        var_dump(json_decode($res, true));
-        return $res;
+        $access_token = Session::get('access_token');
+        if(!isset($access_token)){
+            $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
+            $res = http_curl($url);
+            Session::set('access_token', $res['access_token']);
+        }
+        return $access_token;
     }
 
     //获取微信服务器IP地址
     public function getWxServerIp(){
         //http请求方式: GET https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=ACCESS_TOKEN
-        $res = $this->getAccessToken();
-        if(!isset($res['access_token'])){
+        $access_token = $this->getAccessToken();
+        if(!isset($access_token)){
             echo 'access_token获取失败！';
             exit;
         }
-        $url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='.$res['access_token'];
+        $url = 'https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token='.$access_token;
         $res = http_curl($url);
         var_dump($res);
     }
 
     //创建微信菜单
     public function definedItem(){
-
+        //http请求方式：POST（请使用https协议） https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN
+        $access_token = $this->getAccessToken();
+//        $access_token = '7_hEJC1oDx9Bnb6iXcFDm6ovD66HcuIBVgNib-DDwMV_yFT-WyuJsSR7FKL0rF98JnvxkxgFJbqmneUwQ3Nt75U2TIr_pPss5zJnOEa5OXBXeKIXoEBfb4j7i-shARRWjAEAXXC';
+        if(!isset($access_token)){
+            echo 'access_token获取失败！';
+            exit;
+        }
+        $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$access_token;
+        $post_data = array(
+            'button' => array( // 一级菜单
+                array( // 第一个一级菜单
+                    'type' => 'click',
+                    'name' => '冰',
+                    'key' => '绘画天地',
+                ),
+                array( // 第二个一级菜单
+                    'name' => '美美',
+                    'sub_button' => array(
+                        array(
+                            'type' => 'view',
+                            'name' => '搜索',
+                            'url' => 'https://www.baidu.com'
+                        ),
+                        array(
+                            'type' => 'click',
+                            'name' => '歌曲',
+                            'key' => 'songs'
+                        ),
+                    ),
+                ),
+            ),
+        );
+        $post_data = json_encode($post_data, JSON_UNESCAPED_UNICODE);
+        $res = http_curl($url, 'post', $post_data);
+        var_dump($res);
     }
 
     //test
     public function show(){
-        $weather = new Weather($this->appkey);
+        $access_token = Session::get('access_token');
+        if(isset($access_token)){
+            echo "11<br/>";
+            echo $access_token;
+        }else{
+            echo "222<br/>";
+            $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
+            $res = http_curl($url);
+            Session::set('access_token', $res['access_token']);
+            echo Session::get('access_token');
+
+        }
+
+
+//        $weather = new Weather($this->appkey);
         /*$picurl1 = $_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
         echo $picurl1;
 
