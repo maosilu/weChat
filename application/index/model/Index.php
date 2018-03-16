@@ -5,6 +5,22 @@ use think\Model;
 
 class Index extends Model
 {
+    //回复文本消息
+    public function responseText($postObj, $content = ''){
+        $toUser = $postObj->FromUserName;
+        $fromUser = $postObj->ToUserName;
+        $template = '<xml>
+<ToUserName><![CDATA[%s]]></ToUserName>
+<FromUserName><![CDATA[%s]]></FromUserName>
+<CreateTime>%s</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[%s]]></Content>
+</xml>';
+        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+        return $info;
+    }
+
+    //回复图文消息
     public function responseGraphic($postObj){
         $toUser = $postObj->FromUserName;
         $fromUser = $postObj->ToUserName;

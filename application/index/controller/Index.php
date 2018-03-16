@@ -11,7 +11,7 @@ class Index
     private $appid = '';
     private $secret = '';
     private $appkey = ''; //申请的聚合天气预报APPKEY
-    
+
 
 
 
@@ -89,6 +89,30 @@ class Index
                 //回复用户消息（text类型）
                 $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：\n(1): hello\n(2): 图文\n(3)：北京\n(4): 除以上的任意其他文字有惊喜哦～";
                 break;
+            case 'click': // 自定义菜单中的Event->click
+                $eventKey = strtolower($postObj->EventKey);
+                switch ($eventKey){
+                    case '绘画天地':
+                        //回复text消息
+                        $content = '这是我的绘画天地';
+                        break;
+                    case 'songs':
+                        $content = '这是我喜欢的歌曲';
+                        break;
+                }
+                break;
+            case 'view': // 自定义菜单中的Event->view
+                $eventKey = strtolower($postObj->EventKey);
+                switch ($eventKey){
+                    case 'https://www.baidu.com':
+                        //回复text消息
+                        $content = "<a href='".$eventKey."'>嗖嗖</a>";
+                        break;
+                    case 'http://blog.csdn.net/maosilu_ICE':
+                        $content = "<a href='".$eventKey."'>我的CSDN</a>";
+                        break;
+                }
+                break;
             case 'unsubscribe':
                 $content = '您已取消关注，我会想你的～';
                 break;
@@ -96,16 +120,8 @@ class Index
                 $content = 'receive a new event:'.$postObj->Event;
                 break;
         }
-        $toUser = $postObj->FromUserName;
-        $fromUser = $postObj->ToUserName;
-        $template = '<xml>
-                <ToUserName><![CDATA[%s]]></ToUserName>
-                <FromUserName><![CDATA[%s]]></FromUserName>
-                <CreateTime>%s</CreateTime>
-                <MsgType><![CDATA[text]]></MsgType>
-                <Content><![CDATA[%s]]></Content>
-                </xml>';
-        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+
+        $info = (new model\Index)->responseText($postObj, $content);
         return $info;
     }
     //接收文本消息，回复文本消息
@@ -158,14 +174,7 @@ class Index
             $content = date('Y-m-d H:i:s', time())."\r\n".'<a href="https://github.com/maosilu/weChat">代码git地址</a>'."\r\n嘣嘣嘣嘣！～";
         }
 
-        $template = '<xml>
-<ToUserName><![CDATA[%s]]></ToUserName>
-<FromUserName><![CDATA[%s]]></FromUserName>
-<CreateTime>%s</CreateTime>
-<MsgType><![CDATA[text]]></MsgType>
-<Content><![CDATA[%s]]></Content>
-</xml>';
-        $info = sprintf($template, $toUser, $fromUser, time(), $content);
+        $info = (new model\Index)->responseText($postObj, $content);
         return $info;
 
     }
@@ -225,6 +234,11 @@ class Index
                             'type' => 'click',
                             'name' => '歌曲',
                             'key' => 'songs'
+                        ),
+                        array(
+                            'type' => 'view',
+                            'name' => 'My CSDN',
+                            'url' => 'http://blog.csdn.net/maosilu_ICE'
                         ),
                     ),
                 ),
