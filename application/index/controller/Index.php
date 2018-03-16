@@ -11,9 +11,7 @@ class Index
     private $appid = '';
     private $secret = '';
     private $appkey = ''; //申请的聚合天气预报APPKEY
-
-
-
+    
 
     public function index()
     {
@@ -179,6 +177,22 @@ class Index
 
     }
 
+    //群发接口
+    public function sendMsgAll(){
+         $access_token = $this->getAccessToken();
+         $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token='.$access_token;
+        //发送文本消息
+         $post_data = array(
+             'touser' => 'ohbHRv9UQWbK_5NiGxB_P68fhBoA',
+             'text' => array(
+                 'content' => 'I am a beauty.'
+             ),
+             'msgtype' => 'text'
+         );
+         $res = http_curl($url, 'post', $post_data);
+         var_dump($res);
+    }
+
     /**
      * 获取access_token 将access_token存在session/cookie中
     */
@@ -244,7 +258,6 @@ class Index
                 ),
             ),
         );
-        $post_data = json_encode($post_data, JSON_UNESCAPED_UNICODE);
         $res = http_curl($url, 'post', $post_data);
         var_dump($res);
     }

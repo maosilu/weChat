@@ -15,7 +15,7 @@
  * url解析
  * @param   $url        string   url
  * @param   $type       string   请求类型
- * @param   $post_data  json     post请求参数
+ * @param   $post_data  mixed     post请求参数
  * @param   $resType    string   返回数据类型
  * @return  $res        mixed    url请求解析结果
  * */
@@ -27,6 +27,9 @@ function http_curl($url, $type='get', $post_data = '', $resType = 'array'){
 //    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,false);//从证书中检查ssl加密算法是否存在
     if ($type == 'post'){
         curl_setopt($ch, CURLOPT_POST, 1);
+        if(is_array($post_data)){
+            $post_data = json_encode($post_data, JSON_UNESCAPED_UNICODE);
+        }
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
     }
     $res = curl_exec($ch);
