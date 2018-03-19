@@ -189,6 +189,14 @@ class Index
              ),
              'msgtype' => 'text'
          );
+         //发送图文消息
+        /*$post_data = array(
+            'touser' => 'ohbHRv9UQWbK_5NiGxB_P68fhBoA',
+            'mpnews' => array(
+                'media_id' => '123dsdajkasd231jhksad'
+            ),
+            'msgtype' => 'mpnews'
+        );*/
          $res = http_curl($url, 'post', $post_data);
          var_dump($res);
     }
