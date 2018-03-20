@@ -270,9 +270,49 @@ class Index
         var_dump($res);
     }
 
+    // 以snsapi_base为scope获取网页授权
+    public function getBaseInfo(){
+        // 1.获取到code
+        $redirect_uri = urlencode("http://47.93.200.212/weChat/public/index.php/index/Index/getUserOpenId");
+        $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=$this->appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
+        header("Location:".$url);
+    }
+    // 通过code换取网页授权access_token
+    public function getUserOpenId(){
+        // 2.获取到网页授权的access_token
+        $code = $_GET['code'];
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=$this->appid&secret=$this->secret&code=$code&grant_type=authorization_code";
+        $res = http_curl($url);
+        var_dump($res);
+        // 3.拉取用户的openid
+    }
+
+    //以snsapi_userinfo为scope获取网页授权
+    public function getUserInfo(){
+        // 1.获取到code
+        $redirect_uri = urlencode("http://47.93.200.212/weChat/public/index.php/index/Index/getUser");
+        $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=$this->appid&redirect_uri=$redirect_uri&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+        header("Location:".$url);
+    }
+    // 通过code换取网页授权access_token
+    public function getUser(){
+        // 2.获取到网页授权的access_token
+        $code = $_GET['code'];
+        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=$this->appid&secret=$this->secret&code=$code&grant_type=authorization_code";
+        $res = http_curl($url);
+//        var_dump($res);die;
+        // 3.拉取用户信息
+        $access_token = $res['access_token'];
+        $openid = $res['openid'];
+        $user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$openid&lang=zh_CN";
+        $user_res = http_curl($user_url);
+        var_dump($user_res);
+    }
+
     //test
     public function show(){
-        $access_token = Session::get('access_token');
+        echo config('session.expire');
+        /*$access_token = Session::get('access_token');
         if(isset($access_token)){
             echo "11<br/>";
             echo $access_token;
@@ -283,7 +323,7 @@ class Index
             Session::set('access_token', $res['access_token']);
             echo Session::get('access_token');
 
-        }
+        }*/
 
 
 //        $weather = new Weather($this->appkey);
