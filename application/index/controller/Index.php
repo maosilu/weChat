@@ -13,7 +13,7 @@ class Index
     private $appkey = ''; // 申请的聚合天气预报APPKEY
     private $ip = ''; // 你当前访问的域名，也可以是ip，例：192.168.101.94
     private $openid = '';
-    
+
 
     public function index()
     {
@@ -354,6 +354,30 @@ class Index
         // 4.调用curl函数
        $res = http_curl($url, 'post', $post_data);
        var_dump($res);
+    }
+
+    // 生成带参数的二维码
+    public function getQrCode(){
+        // 1.获取ticket票据
+        //全局票据access_token 网页授权access_token 微信js-SDK jsapi_ticket
+        $access_token = $this->getAccessToken();
+        $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=".$access_token;
+        // 临时二维码请求
+        $post_data = array(
+            'expire_seconds' => 604800, //有效期7天
+            'action_name' => 'QR_SCENE',
+            'action_info' => array(
+                'scene' => array(
+                    'scene_id' => 2000
+                )
+            )
+        );
+        $res = http_curl($url, 'post', $post_data);
+//        var_dump($res);
+        // 2.通过ticket换取二维码图片
+        $ticket = urlencode($res['ticket']);
+        $qr_url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=".$ticket;
+        echo "<img src='".$qr_url."'/>";
     }
 
     //test
