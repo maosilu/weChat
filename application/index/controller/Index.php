@@ -12,6 +12,7 @@ class Index
     private $secret = '';
     private $appkey = ''; // 申请的聚合天气预报APPKEY
     private $ip = ''; // 你当前访问的域名，也可以是ip，例：192.168.101.94
+    private $openid = '';
     
 
     public function index()
@@ -184,7 +185,7 @@ class Index
          $url = 'https://api.weixin.qq.com/cgi-bin/message/mass/preview?access_token='.$access_token;
         //发送文本消息
          $post_data = array(
-             'touser' => 'ohbHRv9UQWbK_5NiGxB_P68fhBoA',
+             'touser' => $this->openid,
              'text' => array(
                  'content' => 'I am a beauty.'
              ),
@@ -192,7 +193,7 @@ class Index
          );
          //发送图文消息
         /*$post_data = array(
-            'touser' => 'ohbHRv9UQWbK_5NiGxB_P68fhBoA',
+            'touser' => $this->openid,
             'mpnews' => array(
                 'media_id' => '123dsdajkasd231jhksad'
             ),
@@ -290,7 +291,6 @@ class Index
         $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=$this->appid&redirect_uri=$redirect_uri&response_type=code&scope=$scope&state=$scope#wechat_redirect";
         header("Location:".$url); // or redirect($url);
     }
-
     //获取网页授权的acces_token
     public function getWebAccessToken(){
         // 2.获取到网页授权的access_token
@@ -302,12 +302,10 @@ class Index
         }
         var_dump($res);
     }
-
     // 不弹出授权页面，直接跳转，只能获取用户openid
     public function getUserOpenId($res){
         var_dump($res);
     }
-
     // 弹出授权页面，可通过openid拿到昵称、性别、所在地。并且， 即使在未关注的情况下，只要用户授权，也能获取其信息
     public function getUser($res){
         // 3.拉取用户信息
@@ -316,6 +314,46 @@ class Index
         $user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=$access_token&openid=$openid&lang=zh_CN";
         $user_res = http_curl($user_url);
         return $user_res;
+    }
+
+    //模版消息实现-发送模版消息
+    public function sendTemplateMsg(){
+        // 1.获取access_token
+        $access_token = $this->getAccessToken();
+        $url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=".$access_token;
+        // 2.组装数组
+        $post_data = array(
+            'touser' => $this->openid,
+            'template_id' => 'y43l_ICs5XQJu9oKoEHi4F-I8l4S6TUf_R0r5D6h93M',
+            'url' => 'https://www.baidu.com',
+            'data' => array(
+                'first' => array(
+                    'value' => "恭喜你购买成功！\r\n",
+                    'color' => "#173177"
+                ),
+                'name' => array(
+                    'value' => "巧克力：",
+                    'color' => "#173177"
+                ),
+                'price' => array(
+                    'value' => "39.8元\r\n",
+                    "color" => "#173177"
+                ),
+                'date' => array(
+                    'value' => date("Y-m-d H:i:s")."\r\n",
+                    'color' => "#173177"
+                ),
+                'remark' => array(
+                    'value' => "欢迎再次购买！\r\n",
+                    'color' => "#173177"
+                )
+            )
+        );
+        // 3.将数组转化为json
+        $post_data = json_encode($post_data, JSON_UNESCAPED_UNICODE);
+        // 4.调用curl函数
+       $res = http_curl($url, 'post', $post_data);
+       var_dump($res);
     }
 
     //test
