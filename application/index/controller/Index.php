@@ -14,6 +14,7 @@ class Index
     private $ip = ''; // 你当前访问的域名，也可以是ip，例：192.168.101.94
     private $openid = '';
     
+
     public function index()
     {
         /*
@@ -88,6 +89,17 @@ class Index
                 //回复用户消息（text类型）
                 $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：\n(1): hello\n(2): 图文\n(3)：北京\n(4): 除以上的任意其他文字有惊喜哦～";
                 break;
+            case 'scan': // 扫描带参数的二维码--用户已关注时的事件推送
+                // 回复用户图文消息
+                $graphic_arr = array(
+                    array(
+                        'title' => '一个丁香一样的，结着愁怨的姑娘',
+                        'description' => '雨巷',
+                        'picUrl' => 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/beauty.jpeg',
+                        'url' => 'https://www.douban.com/group/topic/3454801/'
+                    )
+                );
+                return (new model\Index)->responseGraphic($postObj, $graphic_arr);
             case 'click': // 自定义菜单中的Event->click
                 $eventKey = strtolower($postObj->EventKey);
                 switch ($eventKey){
@@ -140,8 +152,22 @@ class Index
         if($keyword == 'hello'){
             $content = 'hello world';
         }elseif ($keyword == '图文'){
+            $graphic_arr = array(
+                array(
+                    'title' => '我的CSDN',
+                    'description' => '我是美女',
+                    'picUrl' => 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg',
+                    'url' => 'http://blog.csdn.net/maosilu_ICE'
+                ),
+                array(
+                    'title' => '我的开源中国',
+                    'description' => '我是才女',
+                    'picUrl' => 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpg',
+                    'url' => 'https://my.oschina.net/maosilu/blog'
+                ),
+            );
 //            (new \app\index\model\Index())->responseGraphic();
-            return (new model\Index)->responseGraphic($postObj);
+            return (new model\Index)->responseGraphic($postObj, $graphic_arr);
         }elseif($keyword == '北京'){
             $weather = new Weather($this->appkey);
             $cityWeatherResult = $weather->getWeather('北京');
@@ -207,11 +233,11 @@ class Index
     */
     public function getAccessToken(){
         $access_token = Session::get('access_token');
-        if(!isset($access_token)){
+//        if(!isset($access_token)){
             $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
             $res = http_curl($url);
             Session::set('access_token', $res['access_token']);
-        }
+//        }
         return $access_token;
     }
 

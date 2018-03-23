@@ -21,39 +21,27 @@ class Index extends Model
     }
 
     //回复图文消息
-    public function responseGraphic($postObj){
+    public function responseGraphic($postObj, $graphic_arr){
         $toUser = $postObj->FromUserName;
         $fromUser = $postObj->ToUserName;
-        $title1 = '我的CSDN';
-        $description1 = '我是美女';
-        $picurl1 = 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/big_spring.jpeg';
-        $url1 = 'http://blog.csdn.net/maosilu_ICE';
-        $title2 = '我的开源中国';
-        $description2 = '我是才女';
-        $picurl2 = 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/small_spring.jpg';
-        $url2 = 'https://my.oschina.net/maosilu/blog';
-        $template = '<xml>
+        $template = "<xml>
         <ToUserName><![CDATA[%s]]></ToUserName>
         <FromUserName><![CDATA[%s]]></FromUserName>
         <CreateTime>%s</CreateTime>
         <MsgType><![CDATA[news]]></MsgType>
-        <ArticleCount>2</ArticleCount>
-        <Articles>
-            <item>
-                <Title><![CDATA[%s]]></Title>
-                <Description><![CDATA[%s]]></Description>
-                <PicUrl><![CDATA[%s]]></PicUrl>
-                <Url><![CDATA[%s]]></Url>
-            </item>
-            <item>
-                <Title><![CDATA[%s]]></Title>
-                <Description><![CDATA[%s]]></Description>
-                <PicUrl><![CDATA[%s]]></PicUrl>
-                <Url><![CDATA[%s]]></Url>
-            </item>
-        </Articles>
-        </xml>';
-        $info = sprintf($template, $toUser, $fromUser, time(), $title1, $description1, $picurl1, $url1, $title2, $description2, $picurl2, $url2);
+        <ArticleCount>".count($graphic_arr)."</ArticleCount>
+        <Articles>";
+        foreach($graphic_arr as $v){
+            $template .= "<item>
+                <Title><![CDATA[".$v['title']."]]></Title>
+                <Description><![CDATA[".$v['description']."]]></Description>
+                <PicUrl><![CDATA[".$v['picUrl']."]]></PicUrl>
+                <Url><![CDATA[".$v['url']."]]></Url>
+                </item>";
+        }
+        $template .= '</Articles></xml>';
+//        $info = sprintf($template, $toUser, $fromUser, time(), $title1, $description1, $picurl1, $url1, $title2, $description2, $picurl2, $url2);
+        $info = sprintf($template, $toUser, $fromUser, time());
         return $info;
     }
 }
