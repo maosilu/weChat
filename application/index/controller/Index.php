@@ -90,10 +90,16 @@ class Index
                 $content = "欢迎关注【茅丝录】\n微信公众号：gmm_Ice\n请回复：\n(1): hello\n(2): 图文\n(3)：北京\n(4): 除以上的任意其他文字有惊喜哦～";
                 break;
             case 'scan': // 扫描带参数的二维码--用户已关注时的事件推送
+                if(strtolower($postObj->EventKey) == 2000){ // 临时二维码
+                    $tmp = '临时';
+                }
+                if(strtolower($postObj->EventKey) == 'test'){ // 永久二维码
+                    $tmp = '永久';
+                }
                 // 回复用户图文消息
                 $graphic_arr = array(
                     array(
-                        'title' => '一个丁香一样的，结着愁怨的姑娘',
+                        'title' => '一个丁香一样的，结着愁怨的姑娘----'.$tmp,
                         'description' => '雨巷',
                         'picUrl' => 'http://'.$_SERVER['HTTP_HOST'].'/weChat/public/static/image/beauty.jpeg',
                         'url' => 'https://www.douban.com/group/topic/3454801/'
@@ -233,11 +239,11 @@ class Index
     */
     public function getAccessToken(){
         $access_token = Session::get('access_token');
-//        if(!isset($access_token)){
+        if(!isset($access_token)){
             $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
             $res = http_curl($url);
             Session::set('access_token', $res['access_token']);
-//        }
+        }
         return $access_token;
     }
 
@@ -388,7 +394,7 @@ class Index
         $access_token = $this->getAccessToken();
         $url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=".$access_token;
         // 临时二维码请求
-        $post_data = array(
+        /*$post_data = array(
             'expire_seconds' => 604800, //有效期7天
             'action_name' => 'QR_SCENE',
             'action_info' => array(
@@ -396,16 +402,16 @@ class Index
                     'scene_id' => 2000
                 )
             )
-        );
+        );*/
         // 永久二维码请求
-        /*$post_data = array(
+        $post_data = array(
             'action_name' => 'QR_LIMIT_STR_SCENE',
             'action_info' => array(
                 'scene' => array(
                     'scene_str' => 'test'
                 )
             )
-        );*/
+        );
         $res = http_curl($url, 'post', $post_data);
 //        var_dump($res);die;
         // 2.通过ticket换取二维码图片
