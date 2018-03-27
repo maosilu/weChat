@@ -1,11 +1,13 @@
 <?php
 namespace app\index\controller;
 
+use think\Controller;
 use app\index\model;
-use app\index\controller\Weather;
+//use app\index\controller\Weather;
 use think\Session;
+use think\View;
 
-class Index
+class Index extends Controller
 {
 
     private $appid = '';
@@ -13,7 +15,6 @@ class Index
     private $appkey = ''; // 申请的聚合天气预报APPKEY
     private $ip = ''; // 你当前访问的域名，也可以是ip，例：192.168.101.94
     private $openid = '';
-    
 
     public function index()
     {
@@ -238,13 +239,13 @@ class Index
      * 获取access_token 将access_token存在session/cookie中
     */
     public function getAccessToken(){
-        $access_token = Session::get('access_token');
-        if(!isset($access_token)){
+//        $access_token = Session::get('access_token');
+//        if(!Session::get('access_token')){
             $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appid.'&secret='.$this->secret;
             $res = http_curl($url);
             Session::set('access_token', $res['access_token']);
-        }
-        return $access_token;
+//        }
+        return Session::get('access_token');
     }
 
     //获取微信服务器IP地址
@@ -421,11 +422,20 @@ class Index
         unset($post_data);
     }
 
+    //分享到WeChat
+    public function shareWx(){
+        $config = get_jssdk($this->appid);
+        $this->assign('config', $config);
+        return $this->fetch('index/shareWx');
+    }
+
     //test
     public function show(){
-        $user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=7_RDh00xvsXYKPzrm8on6F0fm92KC8lCwpGcABQnkWPDDkzZLDQ2YSHDpbqj-9USUkqZ8mmWXj0l8TbSX_mP_T6b5kmmE5ljiaHqtzf8ys7KE&openid=ohbHRv9UQWbK_5NiGxB_P68fhBoA&lang=zh_CN";
+        return $this->fetch('show');
+//        get_jsapi_ticket();
+        /*$user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=7_RDh00xvsXYKPzrm8on6F0fm92KC8lCwpGcABQnkWPDDkzZLDQ2YSHDpbqj-9USUkqZ8mmWXj0l8TbSX_mP_T6b5kmmE5ljiaHqtzf8ys7KE&openid=ohbHRv9UQWbK_5NiGxB_P68fhBoA&lang=zh_CN";
         $user_res = http_curl($user_url);
-        var_dump($user_res);
+        var_dump($user_res);*/
 //        echo config('session.expire');
         /*$access_token = Session::get('access_token');
         if(isset($access_token)){
