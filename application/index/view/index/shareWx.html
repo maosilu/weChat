@@ -6,13 +6,16 @@
     <title>WeChat JS 分享接口</title>
 </head>
 <body>
-哈哈哈哈哈，我是个集才华与美丽于一身的淑女！！！
+哈哈哈哈哈，我是个集才华与美丽于一身的淑女！！！<br/>
+<button onclick="album();">美美集</button>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script type="text/javascript">
     var appId = "{$config['appId']}";
     var timestamp = "{$config['timestamp']}";
     var nonceStr = "{$config['nonceStr']}";
     var signature = "{$config['signature']}";
+
+    var link = 'http://47.93.200.212/weChat/public/index.php/index/Index/shareWx';
 
     {literal}
     // 通过config接口注入权限验证配置
@@ -22,7 +25,7 @@
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature,// 必填，签名
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'] // 必填，需要使用的JS接口列表
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseImage'] // 必填，需要使用的JS接口列表
     });
 
     // 通过ready接口处理成功验证
@@ -30,7 +33,7 @@
         // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
         wx.onMenuShareTimeline({
             title: 'My CSDN', // 分享标题
-            link: 'http://47.93.200.212/weChat/public/index.php/index/Index/shareWx', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: 'http://47.93.200.212/weChat/public/static/image/csdn.png', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -46,7 +49,7 @@
         wx.onMenuShareAppMessage({
             title: 'My OSChina', // 分享标题
             desc: '小美美的开源中国', // 分享描述
-            link: 'http://47.93.200.212/weChat/public/index.php/index/Index/shareWx', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
             imgUrl: 'http://47.93.200.212/weChat/public/static/image/oschina.png', // 分享图标
             type: 'link', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -60,12 +63,34 @@
             }
         });
 
+        // 拍照或从手机相册中选图接口
+        /*wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            }
+        });*/
+
     });
 
     // 通过error接口处理失败验证
     wx.error(function(res){
         alert('有错误！');
     });
+
+    function album(){
+        // 拍照或从手机相册中选图接口
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            }
+        });
+    }
 
     {/literal}
 </script>
