@@ -27,18 +27,17 @@
 
     // 通过ready接口处理成功验证
     wx.ready(function(){
-
         // 获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
         wx.onMenuShareTimeline({
             title: 'My CSDN', // 分享标题
-            link: 'http://blog.csdn.net/maosilu_ICE', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: "http://{$_SERVER['HTTP_HOST']}/weChat/public/static/image/csdn.png", // 分享图标
+            link: 'http://47.93.200.212/weChat/public/index.php/index/Index/shareWx', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://47.93.200.212/weChat/public/static/image/csdn.png', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
-                alert('success！k1');
+                alert('朋友圈 share success！');
             },
             cancel: function () {
-                alert('fail！hahah');
+                alert('朋友圈 share cancel！');
                 // 用户取消分享后执行的回调函数
             }
         });
@@ -46,18 +45,18 @@
         //获取“分享给朋友”按钮点击状态及自定义分享内容接口
         wx.onMenuShareAppMessage({
             title: 'My OSChina', // 分享标题
-            desc: '我的开源中国', // 分享描述
-            link: 'https://my.oschina.net/maosilu/blog', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: "http://{$_SERVER['HTTP_HOST']}/weChat/public/static/image/oschina.png", // 分享图标
+            desc: '小美美的开源中国', // 分享描述
+            link: 'http://47.93.200.212/weChat/public/index.php/index/Index/shareWx', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://47.93.200.212/weChat/public/static/image/oschina.png', // 分享图标
             type: 'link', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function () {
                 // 用户确认分享后执行的回调函数
-                alert('成功！kk');
+                alert('朋友 share success！');
             },
             cancel: function () {
                 // 用户取消分享后执行的回调函数
-                alert('取消！hh');
+                alert('朋友 share cancel！');
             }
         });
 
@@ -65,7 +64,7 @@
 
     // 通过error接口处理失败验证
     wx.error(function(res){
-
+        alert('有错误！');
     });
 
     {/literal}

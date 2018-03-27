@@ -92,7 +92,7 @@ function get_jssdk($appid){
     $timestamp = time();
     $url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     $str = "jsapi_ticket=$jsapi_ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
-    $signature = sha1($str);
+    $signature = sha1(trim($str));
 
     // 生成JSSDK的权限验证配置
     $config = array(
