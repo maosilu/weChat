@@ -7,7 +7,8 @@
 </head>
 <body>
 哈哈哈哈哈，我是个集才华与美丽于一身的淑女！！！<br/>
-<button onclick="album();">美美集</button>
+<button onclick="album();">美美集</button>&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick="scan();">scan</button>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script type="text/javascript">
     var appId = "{$config['appId']}";
@@ -25,7 +26,7 @@
         timestamp: timestamp, // 必填，生成签名的时间戳
         nonceStr: nonceStr, // 必填，生成签名的随机串
         signature: signature,// 必填，签名
-        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseImage'] // 必填，需要使用的JS接口列表
+        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'chooseImage', 'scanQRCode'] // 必填，需要使用的JS接口列表
     });
 
     // 通过ready接口处理成功验证
@@ -88,6 +89,17 @@
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            }
+        });
+    }
+    
+    function scan() {
+        // 调起微信扫一扫接口
+        wx.scanQRCode({
+            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+            success: function (res) {
+                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
             }
         });
     }
